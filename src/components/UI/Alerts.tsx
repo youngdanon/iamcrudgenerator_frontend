@@ -13,6 +13,7 @@ const Alerts: React.FC = () => {
           // ДОДЕЛАТЬ ОЧИСТКУ ОШИБОК
           if (store.state) {
             setErrors([...errors, JSON.stringify(store.state.error)])
+            console.log(errors)
           }
         })
       }
@@ -20,8 +21,7 @@ const Alerts: React.FC = () => {
   return (
     <div>
         {errors.map((error, index) => {
-          console.log(error, index)
-          return (<Alert key={index} severity='error'>{error}</Alert>)
+          return error ? (<Alert key={index} severity='error'>{error}</Alert>) : ''
         })}
     </div>
   )

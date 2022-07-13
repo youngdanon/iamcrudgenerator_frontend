@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -20,16 +20,19 @@ export default function Register () {
   const [password, setPassword] = useState<string>('')
   const [secondPassword, setSecondPassword] = useState<string>('')
   const [isPasswordValidationFailed, setIsPasswordValidationFailed] = useState<boolean>(false)
+  const [isEmailValidationFailed, setIsEmailValidationFailed] = useState(false)
 
   const { userStore } = useStores()
   const navigate = useNavigate()
 
   const isEmailValid = () => {
-    return email
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      )
+    setIsEmailValidationFailed(() => {
+      return !email
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}])|(([a-zA-Z\-\d]+\.)+[a-zA-Z]{2,}))$/
+        )
+    })
   }
 
   const isPasswordsValid = () => {
@@ -43,15 +46,18 @@ export default function Register () {
   }
 
   const handleSubmit = async () => {
-    // ДОПИЛИТЬ ОШИБКУ ВАЛИДАЦИИ ИМЕЙЛА
-    if (isPasswordsValid() && isEmailValid()) {
+    if (!isPasswordValidationFailed && !isEmailValidationFailed) {
       await userStore.tryRegister({ email, password, username })
       if (userStore.state.isSuccess) {
-        console.log(userStore)
-        navigate('/')
+        navigate(Pages.profile)
       }
     }
   }
+
+  const emailError = useMemo(() => {
+    return email.length !== 0 ? 'Incorrect email' : 'Email is required'
+  }
+  , [email])
 
   return (
     <Container maxWidth="xs">
@@ -82,7 +88,11 @@ export default function Register () {
               onChange={(value) => {
                 setEmail(value.currentTarget.value)
               }}
+              onBlur={isEmailValid}
+              onFocus={() => setIsEmailValidationFailed(false)}
               value={email}
+              error={isEmailValidationFailed}
+              helperText={isEmailValidationFailed ? emailError : ''}
             />
             <TextField
               margin="normal"
@@ -91,7 +101,6 @@ export default function Register () {
               id="username"
               label="Username"
               name="username"
-              autoFocus
               onChange={(value) => {
                 setUsername(value.currentTarget.value)
               }}
@@ -122,6 +131,7 @@ export default function Register () {
               onChange={(value) => {
                 setSecondPassword(value.currentTarget.value)
               }}
+              onBlur={isPasswordsValid}
               value={secondPassword}
               error={isPasswordValidationFailed}
               helperText={isPasswordValidationFailed ? 'Пароли не совпадают' : ''}
@@ -150,7 +160,7 @@ export default function Register () {
               </Grid>
               <Grid item>
                 <Link onClick={() => navigate(Pages.login)} variant="body2">
-                  {'Already have an account? Sign In'}
+                  Already have an account? Sign In
                 </Link>
               </Grid>
             </Grid>

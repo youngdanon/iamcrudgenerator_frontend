@@ -1,61 +1,50 @@
-import { makeAutoObservable, runInAction } from 'mobx'
-import { UserService } from '../../api/services.g'
-import { UserBase, TokenBase, UserCreate } from '../../api/types.g'
-import { FetchingStateStore, StateBaseStore, SuccessStateStore } from '../StateStores'
+import { action, makeObservable, observable, runInAction } from 'mobx'
+import { ProjectService, UserService } from '../../api/services.g'
+import { UserBase, UserCreate, Project } from '../../api/types.g'
+import { FetchingStateStore, SuccessStateStore } from '../StateStores'
 import ErrorStateStore from '../StateStores/ErrorStateStore'
-import User from './User'
+import BaseStore from '../BaseStore'
+import { getToken, setTokenToStorage } from '../../utils'
 
-const tokenName = process.env.REACT_APP_TOKEN_NAME || 'token'
+class UserStore extends BaseStore {
+  @observable public id?: number
 
-const getToken = () => localStorage.getItem(tokenName)
-const setTokenToStorage = (token: string) => {
-  localStorage.setItem(tokenName, token)
-}
+  @observable public email: string
 
-class UserStore {
-  public email?: string
+  @observable public username: string
 
-  public username?: string
+  @observable public projects?: Project[]
 
-  public password?: string
+  @observable public token: string
 
-  public secondPassword?: string
-
-  public data!: User
-
-  /** Состояние стора */
-  public state!: StateBaseStore
-
-  public get user () {
-    return this.data.data
+  constructor () {
+    super()
+    makeObservable(this)
+    this.token = getToken() || ''
+    this.id = undefined
+    this.email = ''
+    this.username = ''
+    this.projects = []
+    this.token = getToken() || ''
   }
 
-  public get userId () {
-    return this.user.id
+  @action
+  setUser (user: UserBase): void {
+    this.id = user.id
+    this.email = user.email
+    this.username = user.username
   }
 
-  constructor (data?: TokenBase & UserBase) {
-    makeAutoObservable(this)
-    if (data) {
-      this.data = new User(data)
-    }
+  get isAuthorized () {
+    return !!this.id || !!getToken()
   }
 
-  updateTokenFromStorage () {
-    if (!this.user.access_token) {
-      const tempToken = getToken()
-      this.data = new User({ ...this.user, access_token: tempToken as string })
-    }
-  }
-
-  async getUserInfo () {
-    this.updateTokenFromStorage()
-    if (this.user.access_token) {
+  async fetchUserInfo () {
+    if (this.token) {
       try {
-        const data = await UserService.getCurrentUserApiV1UserMeGet()
-        runInAction(() => {
-          this.data = new User({ ...this.user, ...data })
-        })
+        const userInfo = await UserService.getCurrentUserApiV1UserMeGet(
+          { headers: { Authorization: `Bearer ${this.token}` } })
+        this.setUser(userInfo)
       } catch (error) {
         this.state = new ErrorStateStore(error)
       }
@@ -64,21 +53,58 @@ class UserStore {
     }
   }
 
-  async tryLogin () {
+  @action
+  async tryLogin (username: string, password: string) {
     try {
       this.state = new FetchingStateStore()
       const tokenInfo = await UserService.authApiV1UserAuthPost({
-        username: this.username as string,
-        password: this.password as string
+        username,
+        password
       })
+      if (tokenInfo.access_token) {
+        setTokenToStorage(tokenInfo.access_token)
+        this.token = tokenInfo.access_token
+      }
+      const userInfo = await UserService.getCurrentUserApiV1UserMeGet(
+        { headers: { Authorization: `Bearer ${this.token}` } })
+      this.setUser(userInfo)
+      await this.tryGetProjects()
+      this.state = new SuccessStateStore()
+    } catch (error) {
+      this.state = new ErrorStateStore(error)
+    }
+  }
+
+  @action
+  async tryRegister (data: UserCreate) {
+    try {
+      this.state = new FetchingStateStore()
+      const createdUser = await UserService.createUserApiV1UserPost(data)
       runInAction(() => {
-        if (tokenInfo.access_token) {
-          setTokenToStorage(tokenInfo.access_token)
+        if (createdUser?.token?.access_token) {
+          setTokenToStorage(createdUser.token.access_token)
+          this.token = createdUser.token.access_token
         }
       })
-      const userInfo = await UserService.getCurrentUserApiV1UserMeGet({ headers: { Authorization: `Bearer ${getToken()}` } })
+      const userInfo = await UserService.getCurrentUserApiV1UserMeGet(
+        { headers: { Authorization: `Bearer ${this.token}` } })
+      this.setUser(userInfo)
+      await this.tryGetProjects()
+      this.state = new SuccessStateStore()
+    } catch (error) {
+      this.state = new ErrorStateStore(error)
+    }
+  }
+
+  @action
+  async tryGetProjects () {
+    try {
+      this.state = new FetchingStateStore()
+      const projectsList = await ProjectService.getProjectsApiV1ProjectGet({
+        headers: { Authorization: `Bearer ${this.token}` }
+      })
       runInAction(() => {
-        this.data = new User({ ...tokenInfo, ...userInfo })
+        this.projects = projectsList.projects
       })
       this.state = new SuccessStateStore()
     } catch (error) {
@@ -86,23 +112,17 @@ class UserStore {
     }
   }
 
-  async tryRegister (data: UserCreate) {
-    try {
-      this.state = new FetchingStateStore()
-      const createdUser = await UserService.createUserApiV1UserPost(data)
-      runInAction(() => {
-        if (createdUser?.token?.access_token) {
-          setTokenToStorage(createdUser?.token?.access_token)
-        }
-      })
-      const userInfo = await UserService.getCurrentUserApiV1UserMeGet({ headers: { Authorization: `Bearer ${getToken()}` } })
-      runInAction(() => {
-        this.data = new User({ ...createdUser.token as TokenBase, ...userInfo })
-      })
-      this.state = new SuccessStateStore()
-    } catch (error) {
-      this.state = new ErrorStateStore(error)
-    }
+  @action
+  clearStore (): void {
+    this.email = ''
+
+    this.username = 'undefined'
+
+    this.id = undefined
+
+    this.token = ''
+
+    this.projects = []
   }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -15,13 +15,14 @@ import Copyright from '../components/UI/Copyright'
 import { Pages } from '../enums'
 
 export default function Login () {
+  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
   const { userStore } = useStores()
   const navigate = useNavigate()
   const handleSubmit = async () => {
-    await userStore.tryLogin()
+    await userStore.tryLogin(username, password)
     if (userStore.state.isSuccess) {
-      console.log(userStore)
-      navigate('/')
+      navigate(Pages.profile)
     }
   }
 
@@ -42,7 +43,7 @@ export default function Login () {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="div"sx={{ mt: 1 }}>
+          <Box component="div" sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -53,9 +54,9 @@ export default function Login () {
               autoComplete="username"
               autoFocus
               onChange={(value) => {
-                userStore.username = value.currentTarget.value
+                setUsername(value.currentTarget.value)
               }}
-              value={userStore.username || undefined}
+              value={username}
             />
             <TextField
               margin="normal"
@@ -67,9 +68,9 @@ export default function Login () {
               id="password"
               autoComplete="current-password"
               onChange={(value) => {
-                userStore.password = value.currentTarget.value
+                setPassword(value.currentTarget.value)
               }}
-              value={userStore.password || undefined}
+              value={password}
             />
             <Button
               type="submit"
