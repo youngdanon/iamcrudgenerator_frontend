@@ -1,26 +1,3 @@
-export interface BodyAuthApiV1UserAuthPost {
-  /**
-   * Grant Type
-   * @pattern password
-   */
-  grant_type?: string;
-
-  /** Username */
-  username: string;
-
-  /** Password */
-  password: string;
-
-  /** Scope */
-  scope?: string;
-
-  /** Client Id */
-  client_id?: string;
-
-  /** Client Secret */
-  client_secret?: string;
-}
-
 export interface DeleteSuccessResponse {
   /** Detail */
   detail?: string;
@@ -128,6 +105,14 @@ export interface UpdateProject {
 export interface UpdateSuccessResponse {
   /** Detail */
   detail?: string;
+}
+
+export interface UserAuth {
+  /** Username */
+  username: string;
+
+  /** Password */
+  password: string;
 }
 
 /**

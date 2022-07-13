@@ -8,7 +8,7 @@ module.exports = {
     'standard'
   ],
   parser: '@typescript-eslint/parser',
-  ignorePatterns: ['src/**/*.g.ts'],
+  ignorePatterns: ['src/**/*.g.ts', 'enums.tsx'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true

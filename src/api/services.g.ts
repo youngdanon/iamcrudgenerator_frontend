@@ -1,5 +1,4 @@
 import {
-  BodyAuthApiV1UserAuthPost,
   DeleteSuccessResponse,
   HTTPValidationError,
   Project,
@@ -9,6 +8,7 @@ import {
   TokenBase,
   UpdateProject,
   UpdateSuccessResponse,
+  UserAuth,
   UserBase,
   UserCreate,
   UserCreateResponse,
@@ -54,12 +54,12 @@ export class UserService {
    *
    * @request POST:/api/v1/User/auth
    */
-  static authApiV1UserAuthPost = async (data: BodyAuthApiV1UserAuthPost, params: RequestParams = {}) =>
+  static authApiV1UserAuthPost = async (data: UserAuth, params: RequestParams = {}) =>
     this.client.request<TokenBase, HTTPValidationError>({
       path: "api/v1/" + this.RoutePath + `/auth`,
       method: "POST",
       body: data,
-      type: ContentType.UrlEncoded,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });
