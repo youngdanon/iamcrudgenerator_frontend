@@ -10,7 +10,8 @@ enum Status {
 
 export enum Pages {
   login = '/login',
-  register = '/register'
+  register = '/register',
+  profile = '/profile'
 }
 
 export default Status
