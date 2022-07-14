@@ -49,7 +49,7 @@ export default function Register () {
     if (!isPasswordValidationFailed && !isEmailValidationFailed) {
       await userStore.tryRegister({ email, password, username })
       if (userStore.state.isSuccess) {
-        navigate(Pages.profile)
+        navigate(Pages.main)
       }
     }
   }

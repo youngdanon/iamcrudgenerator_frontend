@@ -28,30 +28,6 @@ const App: React.FC = () => {
         <Alerts/>
       <Router>
         <Routes>
-          { userStore.isAuthorized
-            ? (
-              <Route
-                element={(
-                  <Navigate
-                    to={Pages.profile}
-                    replace
-                  />
-                )}
-                path="/"
-              />
-              )
-            : (
-              <Route
-                element={(
-                  <Navigate
-                    to={Pages.login}
-                    replace
-                  />
-                )}
-                path="/"
-              />)
-          }
-
           <Route
             element={<Login/>}
             path={Pages.login}
@@ -64,7 +40,7 @@ const App: React.FC = () => {
             ? (
                 <Route
                   element={<MainPage/>}
-                  path={Pages.profile}
+                  path={Pages.main}
                 />
               )
             : (

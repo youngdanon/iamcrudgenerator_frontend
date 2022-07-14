@@ -1,5 +1,5 @@
 import { computed, observable } from 'mobx'
-import Status from '../../enums'
+import { Status } from '../../enums'
 
 /** Базовый класс состояния стора */
 class StateBaseStore {

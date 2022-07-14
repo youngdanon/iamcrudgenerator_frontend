@@ -1,5 +1,13 @@
+import upArrow from './assets/icons/uparrow.svg'
+
+export const icons = {
+  upArrow,
+}
+
+
+
 /** Enum для статуса */
-enum Status {
+export enum Status {
   /** Статус ошибки */
   Error,
   /** Статус нормального состояния */
@@ -11,7 +19,5 @@ enum Status {
 export enum Pages {
   login = '/login',
   register = '/register',
-  profile = '/profile'
+  main = '/main'
 }
-
-export default Status
