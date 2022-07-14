@@ -1,5 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Sidebar from './Sidebar'
+import { useIdle } from 'react-use'
+import { useStores } from '../hooks/useStores'
+import { useNavigate } from 'react-router-dom'
+import { clearStores, removeToken } from '../utils'
+import { Pages } from '../enums'
 
 interface Props {
   children: React.ReactNode
@@ -8,6 +13,22 @@ interface Props {
 const MainLayout: React.FC<Props> = ({
   children
 }) => {
+  const stores = useStores()
+
+  const navigate = useNavigate()
+
+  /** Таймер бездействия на 10минут */
+  const isIdle = useIdle(6e5)
+
+  useEffect(() => {
+    if (isIdle) {
+      removeToken()
+      clearStores(stores)
+      navigate(Pages.login)
+    }
+  }
+  , [isIdle])
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const changeSidebarState = () => {
