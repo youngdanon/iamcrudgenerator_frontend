@@ -19,7 +19,7 @@ const MainLayout: React.FC<Props> = ({
   }, [isSidebarOpen])
 
   return (
-    <div className={`fixed h-full w-full bg-blue-900 ${layoutPadding} flex flex-row gap-x-[1rem]`}>
+    <div className={`fixed h-full w-full bg-secondary ${layoutPadding} flex flex-row gap-x-[1rem]`}>
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         changeSidebarState={() => changeSidebarState()}
