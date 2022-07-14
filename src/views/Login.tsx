@@ -22,7 +22,7 @@ export default function Login () {
   const handleSubmit = async () => {
     await userStore.tryLogin(username, password)
     if (userStore.state.isSuccess) {
-      navigate(Pages.profile)
+      navigate(Pages.main)
     }
   }
 

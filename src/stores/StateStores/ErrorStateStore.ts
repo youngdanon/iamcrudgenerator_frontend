@@ -1,5 +1,5 @@
 import StateBaseStore from './StateBaseStore'
-import Status from '../../enums'
+import { Status } from '../../enums'
 import { ServerError } from '../../errors'
 /** Состояние стора с ошибкой */
 class ErrorStateStore extends StateBaseStore {
