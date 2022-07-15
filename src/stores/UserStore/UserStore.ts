@@ -123,6 +123,8 @@ class UserStore extends BaseStore {
     this.token = ''
 
     this.projects = []
+
+    this.state = new SuccessStateStore()
   }
 }
 
