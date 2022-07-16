@@ -9,7 +9,6 @@ import Login from './views/Login'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Register from './views/Register'
 import { Pages } from './enums'
-import Alerts from './components/UI/Alerts'
 import MainPage from './views/Main'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
@@ -25,7 +24,6 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Alerts/>
       <Router>
         <Routes>
           <Route

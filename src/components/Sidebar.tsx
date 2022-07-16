@@ -22,7 +22,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log(userStore)
     if (!userStore.username) {
       userStore.fetchUserInfo()
     }
@@ -34,13 +33,15 @@ const Sidebar: React.FC<SidebarProps> = ({
     navigate(Pages.login)
   }
 
-  if (isSidebarOpen) {
-    return (
-      <Card className="left-0 h-full w-[25rem] z-40 bg-white">
+  return (
+      <Card className={`transition-all duration-100
+      ${isSidebarOpen
+        ? 'left-0 h-full z-40 bg-white w-[25rem]'
+        : 'left-0 h-full w-[4rem] z-40 bg-white  border-gray-300 shadow rounded-tr-[16px] rounded-br-[16px]'}`}>
         <div className="flex flex-col h-full">
           <div className="grow flex flex-col text-left gap-y-4 h-full">
             <div className="flex flex-row">
-              <div className=" flex flex-col">
+              <div className={`flex flex-col ${!isSidebarOpen && 'hidden'}`}>
                 <h2 className="text-xl">
                   {userStore.username}
                 </h2>
@@ -48,35 +49,29 @@ const Sidebar: React.FC<SidebarProps> = ({
                   {userStore.email}
                 </h3>
               </div>
-              <img
-                alt="arrow"
-                src={icons.upArrow}
-                className={'w-[1rem] h-[1rem] ml-auto my-auto mr-[0.5rem] rotate-[-90deg]'}
+              <div
+                className={`p-[0.5rem] my-auto rounded-full hover:border-gray-300 hover:shadow 
+                ${isSidebarOpen ? 'ml-auto mr-[0.5rem]' : 'mx-auto'}`}
                 onClick={() => { changeSidebarState() }}
-              />
+              >
+                <img
+                  alt="arrow"
+                  src={icons.upArrow}
+                  className={`w-[1rem] h-[1rem] ${isSidebarOpen ? 'rotate-[-90deg]' : 'rotate-[90deg]'} transition-all duration-500`}
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-y-2">
+            <div className={`flex flex-col gap-y-2 ${!isSidebarOpen && 'hidden'}`}>
               <hr/>
               <Link color="error" underline="none" className="cursor-pointer"
                     onClick={logout}>Logout</Link>
             </div>
           </div>
-          <Copyright/>
+          <div className={`${!isSidebarOpen && 'hidden'}`}>
+            <Copyright/>
+          </div>
         </div>
       </Card>
-    )
-  }
-  return (
-    <div className="left-0 h-full w-[3rem] z-40 bg-white p-[1rem] border-gray-300 shadow rounded-tr-[16px] rounded-br-[16px] ">
-      <div className="flex flex-col h-full mt-[0.5rem]">
-        <img
-          alt="arrow"
-          src={icons.upArrow}
-          className={'w-[1rem] h-[1rem] ml-auto mr-[0.5rem] rotate-[90deg]'}
-          onClick={() => { changeSidebarState() }}
-        />
-      </div>
-    </div>
   )
 }
 

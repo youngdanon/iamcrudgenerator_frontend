@@ -1,7 +1,7 @@
 import { action, makeObservable, observable } from 'mobx'
 import BaseStore from '../BaseStore'
 import { Project } from '../../api/types.g'
-import { SuccessStateStore } from '../StateStores'
+import { StateBaseStore } from '../StateStores'
 
 class ProjectStore extends BaseStore {
   /** Project id */
@@ -32,7 +32,7 @@ class ProjectStore extends BaseStore {
     this.name = ''
     this.created_at = undefined
     this.updated_at = undefined
-    this.state = new SuccessStateStore()
+    this.state = new StateBaseStore()
   }
 }
 

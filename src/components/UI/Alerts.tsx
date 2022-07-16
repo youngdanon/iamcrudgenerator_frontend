@@ -11,7 +11,7 @@ const Alerts: React.FC = () => {
       autorun(() => {
         stores.forEach((store) => {
           // ДОДЕЛАТЬ ОЧИСТКУ ОШИБОК
-          if (store.state) {
+          if (store.state.isError) {
             setErrors([...errors, JSON.stringify(store.state.error)])
             console.log(errors)
           }
