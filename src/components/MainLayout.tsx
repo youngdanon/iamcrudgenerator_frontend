@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from './Sidebar'
 import { useIdle } from 'react-use'
 import { useStores } from '../hooks/useStores'
@@ -35,12 +35,8 @@ const MainLayout: React.FC<Props> = ({
     setIsSidebarOpen(!isSidebarOpen)
   }
 
-  const layoutPadding = useMemo(() => {
-    return isSidebarOpen ? 'p-[1rem]' : 'py-[1rem] pr-[1rem]'
-  }, [isSidebarOpen])
-
   return (
-    <div className={`fixed h-full w-full bg-secondary ${layoutPadding} flex flex-row gap-x-[1rem]`}>
+    <div className={'fixed h-full w-full bg-secondary p-[1rem] flex flex-row gap-x-[1rem]'}>
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         changeSidebarState={() => changeSidebarState()}

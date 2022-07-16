@@ -1,7 +1,7 @@
 import { action, makeObservable, observable, runInAction } from 'mobx'
-import { ProjectService, UserService } from '../../api/services.g'
-import { UserBase, UserCreate, Project } from '../../api/types.g'
-import { FetchingStateStore, SuccessStateStore } from '../StateStores'
+import { UserService } from '../../api/services.g'
+import { UserBase, UserCreate } from '../../api/types.g'
+import { FetchingStateStore, StateBaseStore, SuccessStateStore } from '../StateStores'
 import ErrorStateStore from '../StateStores/ErrorStateStore'
 import BaseStore from '../BaseStore'
 import { getToken, setTokenToStorage } from '../../utils'
@@ -13,8 +13,6 @@ class UserStore extends BaseStore {
 
   @observable public username: string
 
-  @observable public projects?: Project[]
-
   @observable public token: string
 
   constructor () {
@@ -24,7 +22,6 @@ class UserStore extends BaseStore {
     this.id = undefined
     this.email = ''
     this.username = ''
-    this.projects = []
     this.token = getToken() || ''
   }
 
@@ -36,15 +33,18 @@ class UserStore extends BaseStore {
   }
 
   get isAuthorized () {
+    console.log('render isAuthorised')
     return !!this.id || !!getToken()
   }
 
+  @action
   async fetchUserInfo () {
     if (this.token) {
       try {
-        const userInfo = await UserService.getCurrentUserApiV1UserMeGet(
-          { headers: { Authorization: `Bearer ${this.token}` } })
+        this.state = new FetchingStateStore()
+        const userInfo = await UserService.getCurrentUserApiV1UserMeGet()
         this.setUser(userInfo)
+        this.state = new SuccessStateStore()
       } catch (error) {
         this.state = new ErrorStateStore(error)
       }
@@ -65,10 +65,8 @@ class UserStore extends BaseStore {
         setTokenToStorage(tokenInfo.access_token)
         this.token = tokenInfo.access_token
       }
-      const userInfo = await UserService.getCurrentUserApiV1UserMeGet(
-        { headers: { Authorization: `Bearer ${this.token}` } })
+      const userInfo = await UserService.getCurrentUserApiV1UserMeGet()
       this.setUser(userInfo)
-      await this.tryGetProjects()
       this.state = new SuccessStateStore()
     } catch (error) {
       this.state = new ErrorStateStore(error)
@@ -86,26 +84,8 @@ class UserStore extends BaseStore {
           this.token = createdUser.token.access_token
         }
       })
-      const userInfo = await UserService.getCurrentUserApiV1UserMeGet(
-        { headers: { Authorization: `Bearer ${this.token}` } })
+      const userInfo = await UserService.getCurrentUserApiV1UserMeGet()
       this.setUser(userInfo)
-      await this.tryGetProjects()
-      this.state = new SuccessStateStore()
-    } catch (error) {
-      this.state = new ErrorStateStore(error)
-    }
-  }
-
-  @action
-  async tryGetProjects () {
-    try {
-      this.state = new FetchingStateStore()
-      const projectsList = await ProjectService.getProjectsApiV1ProjectGet({
-        headers: { Authorization: `Bearer ${this.token}` }
-      })
-      runInAction(() => {
-        this.projects = projectsList.projects
-      })
       this.state = new SuccessStateStore()
     } catch (error) {
       this.state = new ErrorStateStore(error)
@@ -116,15 +96,13 @@ class UserStore extends BaseStore {
   clearStore (): void {
     this.email = ''
 
-    this.username = 'undefined'
+    this.username = ''
 
     this.id = undefined
 
     this.token = ''
 
-    this.projects = []
-
-    this.state = new SuccessStateStore()
+    this.state = new StateBaseStore()
   }
 }
 

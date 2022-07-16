@@ -135,15 +135,7 @@ export default function Register () {
               value={secondPassword}
               error={isPasswordValidationFailed}
               helperText={isPasswordValidationFailed ? 'Пароли не совпадают' : ''}
-
             />
-
-            {/* <input
-              value={secondPassword}
-              onChange={(value) => {
-                console.log(value.currentTarget.value)
-                setSecondPassword(value.currentTarget.value || '')
-              }}/> */}
             <Button
               fullWidth
               variant="contained"
