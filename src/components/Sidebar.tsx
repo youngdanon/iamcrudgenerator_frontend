@@ -34,44 +34,51 @@ const Sidebar: React.FC<SidebarProps> = ({
   }
 
   return (
-      <Card className={`transition-all duration-100
+    <Card className={`transition-all duration-100
       ${isSidebarOpen
         ? 'left-0 h-full z-40 bg-white w-[25rem]'
-        : 'left-0 h-full w-[4rem] z-40 bg-white  border-gray-300 shadow rounded-tr-[16px] rounded-br-[16px]'}`}>
-        <div className="flex flex-col h-full">
-          <div className="grow flex flex-col text-left gap-y-4 h-full">
-            <div className="flex flex-row">
-              <div className={`flex flex-col ${!isSidebarOpen && 'hidden'}`}>
-                <h2 className="text-xl">
-                  {userStore.username}
-                </h2>
-                <h3 className="text-sm font-light">
-                  {userStore.email}
-                </h3>
-              </div>
-              <div
-                className={`p-[0.5rem] my-auto rounded-full hover:border-gray-300 hover:shadow 
-                ${isSidebarOpen ? 'ml-auto mr-[0.5rem]' : 'mx-auto'}`}
-                onClick={() => { changeSidebarState() }}
-              >
-                <img
-                  alt="arrow"
-                  src={icons.upArrow}
-                  className={`w-[1rem] h-[1rem] ${isSidebarOpen ? 'rotate-[-90deg]' : 'rotate-[90deg]'} transition-all duration-500`}
-                />
-              </div>
+        : 'left-0 h-full w-[4rem] z-40 bg-white  border-gray-300 shadow rounded-tr-[16px] rounded-br-[16px]'}`}
+    >
+      <div className="flex flex-col h-full">
+        <div className="grow flex flex-col text-left gap-y-4 h-full">
+          <div className="flex flex-row">
+            <div className={`flex flex-col ${!isSidebarOpen && 'hidden'}`}>
+              <h2 className="text-xl">
+                {userStore.username}
+              </h2>
+              <h3 className="text-sm font-light">
+                {userStore.email}
+              </h3>
             </div>
-            <div className={`flex flex-col gap-y-2 ${!isSidebarOpen && 'hidden'}`}>
-              <hr/>
-              <Link color="error" underline="none" className="cursor-pointer"
-                    onClick={logout}>Logout</Link>
+            <div
+              className={`p-[0.5rem] my-auto rounded-full hover:border-gray-300 hover:shadow 
+                ${isSidebarOpen ? 'ml-auto mr-[0.5rem]' : 'mx-auto'}`}
+              onClick={() => { changeSidebarState() }}
+            >
+              <img
+                alt="arrow"
+                className={`w-[1rem] h-[1rem] ${isSidebarOpen ? 'rotate-[-90deg]' : 'rotate-[90deg]'} transition-all duration-500`}
+                src={icons.upArrow}
+              />
             </div>
           </div>
-          <div className={`${!isSidebarOpen && 'hidden'}`}>
-            <Copyright/>
+          <div className={`flex flex-col gap-y-2 ${!isSidebarOpen && 'hidden'}`}>
+            <hr/>
+            <Link
+              className="cursor-pointer"
+              color="error"
+              onClick={logout}
+              underline="none"
+            >
+              Logout
+            </Link>
           </div>
         </div>
-      </Card>
+        <div className={`${!isSidebarOpen && 'hidden'}`}>
+          <Copyright/>
+        </div>
+      </div>
+    </Card>
   )
 }
 

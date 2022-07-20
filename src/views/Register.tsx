@@ -61,104 +61,119 @@ export default function Register () {
 
   return (
     <Container maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <HowToRegIcon />
+        </Avatar>
+        <Typography
+          component="h1"
+          variant="h5"
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <HowToRegIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" sx={{ mt: 1 }}>
+          Sign up
+        </Typography>
+        <Box
+          component="form"
+          sx={{ mt: 1 }}
+        >
           <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoFocus
-              onChange={(value) => {
-                setEmail(value.currentTarget.value)
-              }}
-              onBlur={isEmailValid}
-              onFocus={() => setIsEmailValidationFailed(false)}
-              value={email}
-              error={isEmailValidationFailed}
-              helperText={isEmailValidationFailed ? emailError : ''}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              onChange={(value) => {
-                setUsername(value.currentTarget.value)
-              }}
-              value={username}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              onChange={(value) => {
-                setPassword(value.currentTarget.value)
-              }}
-              value={password}
-              error={isPasswordValidationFailed}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="RepeatPassword"
-              label="Repeat Password"
-              type="password"
-              id="RepeatPassword"
-              onChange={(value) => {
-                setSecondPassword(value.currentTarget.value)
-              }}
-              onBlur={isPasswordsValid}
-              value={secondPassword}
-              error={isPasswordValidationFailed}
-              helperText={isPasswordValidationFailed ? 'Пароли не совпадают' : ''}
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleSubmit}
+            error={isEmailValidationFailed}
+            helperText={isEmailValidationFailed ? emailError : ''}
+            id="email"
+            label="Email"
+            margin="normal"
+            name="email"
+            onBlur={isEmailValid}
+            onChange={(value) => {
+              setEmail(value.currentTarget.value)
+            }}
+            onFocus={() => setIsEmailValidationFailed(false)}
+            value={email}
+            autoFocus
+            fullWidth
+            required
+          />
+          <TextField
+            id="username"
+            label="Username"
+            margin="normal"
+            name="username"
+            onChange={(value) => {
+              setUsername(value.currentTarget.value)
+            }}
+            value={username}
+            fullWidth
+            required
+          />
+          <TextField
+            error={isPasswordValidationFailed}
+            id="password"
+            label="Password"
+            margin="normal"
+            name="password"
+            onChange={(value) => {
+              setPassword(value.currentTarget.value)
+            }}
+            type="password"
+            value={password}
+            fullWidth
+            required
+          />
+          <TextField
+            error={isPasswordValidationFailed}
+            helperText={isPasswordValidationFailed ? 'Пароли не совпадают' : ''}
+            id="RepeatPassword"
+            label="Repeat Password"
+            margin="normal"
+            name="RepeatPassword"
+            onBlur={isPasswordsValid}
+            onChange={(value) => {
+              setSecondPassword(value.currentTarget.value)
+            }}
+            type="password"
+            value={secondPassword}
+            fullWidth
+            required
+          />
+          <Button
+            onClick={handleSubmit}
+            sx={{ mt: 3, mb: 2 }}
+            variant="contained"
+            fullWidth
+          >
+            Sign Up
+          </Button>
+          <Grid container>
+            <Grid
+              item
+              xs
             >
-              Sign Up
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link onClick={() => navigate(Pages.login)} variant="body2">
-                  Already have an account? Sign In
-                </Link>
-              </Grid>
+              <Link
+                href="#"
+                variant="body2"
+              >
+                Forgot password?
+              </Link>
             </Grid>
-          </Box>
+            <Grid item>
+              <Link
+                onClick={() => navigate(Pages.login)}
+                variant="body2"
+              >
+                Already have an account? Sign In
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
+      </Box>
+      <Copyright sx={{ mt: 8, mb: 4 }} />
+    </Container>
   )
 }
