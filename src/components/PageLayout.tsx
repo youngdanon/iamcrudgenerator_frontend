@@ -16,8 +16,8 @@ const PageLayout: React.FC<Props> = (
   }
 ) => {
   return (
-    <Card className="w-full h-full bg-white">
-      <div className="flex flex-col gap-y-[2rem] m-[1rem]">
+    <Card className="w-full h-full bg-white p-[2rem]">
+      <div className="flex flex-col gap-y-[2rem] h-full">
         <h1 className="text-5xl font-bold text-left">{title}</h1>
         {!buttons && <hr/>}
         { buttons &&
@@ -42,7 +42,7 @@ const PageLayout: React.FC<Props> = (
           )
         }
         { !buttons && <hr/> }
-          <div>
+        <div className="h-full">
           {children}
         </div>
       </div>

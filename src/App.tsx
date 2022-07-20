@@ -24,37 +24,37 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route
-            element={<Login/>}
-            path={Pages.login}
-          />
-          <Route
-            element={<Register/>}
-            path={Pages.register}
-          />
-          { userStore.isAuthorized
-            ? (
+        <Router>
+          <Routes>
+            <Route
+              element={<Login/>}
+              path={Pages.login}
+            />
+            <Route
+              element={<Register/>}
+              path={Pages.register}
+            />
+            { userStore.isAuthorized
+              ? (
                 <Route
                   element={<MainPage/>}
                   path={Pages.main}
                 />
-              )
-            : (
-              <Route
-                element={(
-                  <Navigate
-                    to={Pages.login}
-                    replace
-                  />
+                )
+              : (
+                <Route
+                  element={(
+                    <Navigate
+                      to={Pages.login}
+                      replace
+                    />
                 )}
-                path="*"
-              />
-              )
+                  path="*"
+                />
+                )
           }
-        </Routes>
-      </Router>
+          </Routes>
+        </Router>
       </ThemeProvider>
     </div>
   )

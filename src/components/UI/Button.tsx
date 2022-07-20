@@ -38,9 +38,9 @@ const Button: React.FC<ButtonProps> = ({
           {icon && (
             <div>
               <img
-                src={icons[icon]}
-                className={`w-4 h-4 my-auto rotate-[${iconRotation}]`}
                 alt={title}
+                className={`w-4 h-4 my-auto rotate-[${iconRotation}]`}
+                src={icons[icon]}
               />
             </div>
           )}
@@ -55,9 +55,9 @@ const Button: React.FC<ButtonProps> = ({
         >
           {icon && (
             <img
-              src={icons[icon]}
-              className={`w-4 h-4 my-auto rotate-[${iconRotation}]`}
               alt={title}
+              className={`w-4 h-4 my-auto rotate-[${iconRotation}]`}
+              src={icons[icon]}
             />
           )}
           <h4 className="text-white font-semibold">{title}</h4>
